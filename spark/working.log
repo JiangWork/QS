@@ -1,0 +1,31 @@
+# this is log for env setup
+
+Spark Location: /Users/Miller/Work/OpenSource_Framework/spark
+Hadoop Location: /Users/Miller/Work/OpenSource_Framework/hadoop-2.7.1/hadoop-2.7.1
+
+Start hadoop:
+sbin/start-dfs.sh   http://localhost:50070/
+sbin/start-yarn.sh http://localhost:8088/
+
+refer to: http://www.tuicool.com/articles/2e2q2y 
+
+Modify spark-env.sh
+
+export SCALA_HOME=/Users/Miller/Environments/Scala-2.11.4
+export JAVA_HOME=$(/usr/libexec/java_home)
+export SPARK_MASTER_HOST=localhost
+export SPARK_WORKER_MEMORY=2000m
+
+start spark: sbin/start-all.sh http://192.168.1.101:8080
+sbin/stop-all.sh
+run demo: bin/run-example SparkPi
+
+Multiple slaves: add an new entry in /conf/slaves (two lines of localhost)
+
+bin/spark-shell.sh http://192.168.1.101:4040
+
+Quick Start: http://spark.apache.org/docs/latest/quick-start.html
+
+Building spark: http://spark.apache.org/docs/latest/building-spark.html
+
+IDE 搭建: http://www.zhihu.com/question/24869894
