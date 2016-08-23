@@ -1,0 +1,31 @@
+compile
+  UID   PID  PPID   C STIME   TTY           TIME CMD
+    0     1     0   0 Fri06AM ??         5:03.86 /sbin/launchd
+    0    47     1   0 Fri06AM ??         0:24.47 /usr/sbin/syslogd
+    0    48     1   0 Fri06AM ??         0:12.55 /usr/libexec/UserEventAgent (System)
+    0    51     1   0 Fri06AM ??         0:11.13 /usr/libexec/kextd
+    0    52     1   0 Fri06AM ??         0:14.22 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/FSEvents.framework/Versions/A/Support/fseventsd
+    0    54     1   0 Fri06AM ??         0:06.23 /opt/cisco/anyconnect/bin/vpnagentd -execv_instance
+   55    57     1   0 Fri06AM ??         0:00.54 /System/Library/CoreServices/appleeventsd --server
+    0    58     1   0 Fri06AM ??         0:08.68 /usr/libexec/configd
+    0    59     1   0 Fri06AM ??         0:19.04 /System/Library/CoreServices/powerd.bundle/powerd
+    0    65     1   0 Fri06AM ??         0:18.86 /usr/libexec/airportd
+    0    66     1   0 Fri06AM ??         0:00.62 /usr/libexec/warmd
+    0    68     1   0 Fri06AM ??         1:18.74 /System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Support/mds
+    0    72     1   0 Fri06AM ??         0:00.21 /System/Library/CoreServices/iconservicesagent
+  240    73     1   0 Fri06AM ??         0:00.10 /System/Library/CoreServices/iconservicesd
+    0    74     1   0 Fri06AM ??         0:00.69 /usr/libexec/diskarbitrationd
+    0    76     1   0 Fri06AM ??         0:05.83 /usr/libexec/coreduetd
+    0    77     1   0 Fri06AM ??         0:00.08 /usr/libexec/wdhelper
+    0    79     1   0 Fri06AM ??         0:15.69 /usr/libexec/opendirectoryd
+    0    80     1   0 Fri06AM ??         0:00.56 /usr/sbin/wirelessproxd
+    0    82     1   0 Fri06AM ??         0:06.70 /System/Library/PrivateFrameworks/ApplePushService.framework/apsd
+    0    83     1   0 Fri06AM ??         0:08.28 /System/Library/CoreServices/launchservicesd
+  213    84     1   0 Fri06AM ??         0:00.15 /System/Library/PrivateFrameworks/MobileDevice.framework/Versions/A/Resources/usbmuxd -launchd
+    0    85     1   0 Fri06AM ??         0:06.93 /usr/sbin/securityd -i
+  205    87     1   0 Fri06AM ??         0:09.66 /usr/libexec/locationd
+  244    89     1   0 Fri06AM ??         0:00.16 /usr/libexec/displaypolicyd
+    0    90     1   0 Fri06AM ??         0:03.40 /usr/sbin/blued
+compile
+package
+exit
