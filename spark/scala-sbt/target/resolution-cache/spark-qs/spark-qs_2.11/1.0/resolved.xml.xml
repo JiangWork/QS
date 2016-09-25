@@ -4,7 +4,7 @@
 		module="spark-qs_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20160823232847"
+		publication="20160829212238"
 	>
 		<description>
 		spark-qs

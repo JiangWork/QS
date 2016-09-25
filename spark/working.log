@@ -16,7 +16,7 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 export SPARK_MASTER_HOST=localhost
 export SPARK_WORKER_MEMORY=2000m
 
-start spark: sbin/start-all.sh http://192.168.1.101:8080 (see log for binding URL)
+start spark: sbin/start-all.sh http://192.168.1.101:8080
 sbin/stop-all.sh
 run demo: bin/run-example SparkPi
 
@@ -34,22 +34,6 @@ IDE 搭建: http://www.zhihu.com/question/24869894
 
 搭建sbt: ./scala/build.sbt,  sbt update
 
-~/.sbt/0.12/plugins/build.sbt
-resolvers ++= Seq(
-    "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
-)
-addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.7.0-SNAPSHOT")
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.5.0")
 
-JAVA with Maven
-Scala with sbt
-
-sbt 构建项目  
-sbt eclipse
-sbt gen-idea
-
-
-JAVA Project: /Users/Miller/GitHub/QS/spark/java/SparkQS
-mvn package
-$SPARK_HOME/bin//spark-submit  --class "spark.qs.SimpleSparkApp" --master local[4] spark-qs.jar
+sbt 
 

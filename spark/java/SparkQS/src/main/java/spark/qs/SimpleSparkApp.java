@@ -26,7 +26,6 @@ public class SimpleSparkApp {
 		    }).count();
 
 		    System.out.println("JIANGZHAO>> Lines with a: " + numAs + ", lines with b: " + numBs);
-		   
 		    new Thread(() -> System.out.println("Lambda experssion")).start();
 	}
 
