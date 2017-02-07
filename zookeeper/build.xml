@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<project name="zookeeperQs" basedir="." default="makejar">
+    <property name="build.dir" value="build" />
+    <property name="src.dir" value="src/java" />
+    <property name="jarname" value="zookeeper-qs.jar" />
+
+    <path id="master-classpath">
+        <fileset dir="lib">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement path="${build.dir}" />
+    </path>
+    <target name="clean">
+        <delete includeemptydirs="true">
+            <fileset dir="${build.dir}" includes="**/*" />
+        </delete>
+    </target>
+
+    <target name="compile" depends="clean">
+        <javac destdir="${build.dir}" failonerror="true">
+            <src path="${src.dir}" />
+            <classpath refid="master-classpath"/>
+        </javac>
+    </target>
+
+    <target name="makejar" depends="compile">
+         <jar destfile="${jarname}" basedir="${build.dir}"/>
+    </target>
+
+</project>
