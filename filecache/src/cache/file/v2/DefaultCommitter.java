@@ -4,8 +4,13 @@ import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DefaultCommitter implements Committer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultCommitter.class);
+    
     private BlockingQueue<Task> queue;
     private volatile boolean shouldRun;
     private Worker worker;
@@ -21,7 +26,7 @@ public class DefaultCommitter implements Committer {
         task.submitTime = System.currentTimeMillis();
         try {
             queue.put(task);
-            System.out.println("Submitted task: " + task);
+            LOG.info("Submitted task: {}.", task);
         } catch (InterruptedException e) {
             // log
         }        
@@ -56,7 +61,7 @@ public class DefaultCommitter implements Committer {
         }
         
         public void run() {
-            System.out.println("Starting thread " + this.getName());
+            LOG.info("Starting thread {}.", getName());
             while(shouldRun && !isInterrupted()) {
                 Task task = null;
                 try {
@@ -68,7 +73,7 @@ public class DefaultCommitter implements Committer {
                 }
                 execute(task);
             }
-            System.out.println("Exiting thread " + this.getName() + " interrupted " + isInterrupted() + " remaining " + size());
+            LOG.info("Exiting thread {}: interrupted {} remaining {}.", getName(), isInterrupted(), size());
         }
         
         /**
@@ -77,7 +82,7 @@ public class DefaultCommitter implements Committer {
          * @param task
          */
         public void execute(Task task) {
-            System.out.println("Executing task: " + task);
+            LOG.info("Executing task: {}.", task);
             task.startTime = System.currentTimeMillis();
 //            final Path path = task.to;
 //            path.make();
@@ -125,7 +130,7 @@ public class DefaultCommitter implements Committer {
               }
           }
         };
-        //submitter.start();
+        submitter.start();
         
     }
 }

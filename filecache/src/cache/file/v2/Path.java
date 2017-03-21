@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 
  * A Path represents cache layout on the disk. 
@@ -23,6 +26,7 @@ import java.util.List;
  */
 public class Path {
  
+    private static final Logger LOG = LoggerFactory.getLogger(Path.class);
     private String parent;
     private String cacheDir;
     /**the identity of the cache content this path contains, e.g., FMID**/
@@ -59,14 +63,14 @@ public class Path {
             try {
                 absPath = symLink.getCanonicalPath();
             } catch (IOException e) {
-                //log
+                LOG.error("Can't get canonical path of " + parent + "/" + symbolic, e);
                 absPath = symLink.getAbsolutePath();
             }
             String vStr = CacheDirectory.getCacheVersion(absPath);
             try {
                 version = Integer.parseInt(vStr) + 1;
             } catch(NumberFormatException e) {
-                // log
+                LOG.error("Can't get version number of " + absPath);
             }            
         }
         return version;

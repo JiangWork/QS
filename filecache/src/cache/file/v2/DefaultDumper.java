@@ -7,6 +7,9 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A DefaultDumper is an concrete implementation of {@link Dumper}.
  * It has unlimited capacity to accept tasks.
@@ -17,6 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @version V1.0
  */
 public class DefaultDumper implements Dumper {
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultDumper.class);
 
     private List<Task> queue;
     private volatile boolean shouldRun;
@@ -47,13 +51,13 @@ public class DefaultDumper implements Dumper {
             boolean found = false;
             for (Task qt: queue) {
                 if(qt.identity.equals(identity)) {
-                    System.out.println(String.format("Queued task found (id:%s), changed %s to %s", identity,  qt.file, file));
+                    LOG.info("Queued task found (id:{}), changed {} to {}.", identity,  qt.file, file);
                     found = true;
                     qt.file = file;
                 }
             }
             if (!found) {
-                System.out.println("Adding task to queue: " + task);
+                LOG.info("Adding task to queue:{}.", task);
                 queue.add(task);
             }
             notEmpty.signal();
@@ -98,7 +102,7 @@ public class DefaultDumper implements Dumper {
         
         // execute task from queue
         public void run() {
-            System.out.println("Starting thread " + this.getName());
+            LOG.info("Starting thread {}.", getName());
             while(shouldRun && !isInterrupted()) {
                 Task obtainedTask = null;
                 try {
@@ -108,12 +112,12 @@ public class DefaultDumper implements Dumper {
                     break;
                 }
                 if (obtainedTask == null) {
-                    System.out.println("Obtained task is null. Continuing ...");
+                    LOG.debug("Obtained task is null. Continuing ...");
                 }
                 execute(obtainedTask); 
                 // commit the task
             }
-            System.out.println("Exiting thread " + this.getName() + " interrupted " + isInterrupted() + " remaining " + size());
+            LOG.info("Exiting thread {}: interrupted {} remaining {}.", getName(), isInterrupted(), size());
         }
         
         
@@ -132,7 +136,7 @@ public class DefaultDumper implements Dumper {
         }
         
         public void execute(Task task) {
-            System.out.println("Executing task: " + task);
+            LOG.info("Executing task: {}.", task);
             task.startTime = System.currentTimeMillis();
             try {
                 Thread.sleep(1000);
