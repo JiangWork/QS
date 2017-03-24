@@ -8,7 +8,7 @@ package cache.file.v2;
  * @date Mar 14, 2017
  * @version V1.0
  */
-public interface Dumper {
+public interface Dumper extends LifeCycle {
     
     /**
      * Submit the dump work to dumper.

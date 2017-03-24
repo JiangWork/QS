@@ -10,7 +10,7 @@ package cache.file.v2;
  * @date Mar 14, 2017
  * @version V1.0
  */
-public interface Committer {
+public interface Committer extends LifeCycle {
 
     /**
      * Commit the cache data, non-blocking fashion.

@@ -32,15 +32,14 @@ public class DefaultCommitter implements Committer {
         }        
     }
     
+    @Override
     public void start() {
         shouldRun = true;
         worker.start();
     }
     
-    /**
-     * Stop the committer and return the number of unfinished tasks.
-     */
-    public int stop() {
+    @Override
+    public void stop() {
         shouldRun = false;
         worker.interrupt();
         try {
@@ -48,7 +47,6 @@ public class DefaultCommitter implements Committer {
         } catch (InterruptedException e) {
             // who cares?
         }
-        return size();
     }
     
     public int size() {

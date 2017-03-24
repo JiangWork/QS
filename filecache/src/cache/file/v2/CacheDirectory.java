@@ -1,6 +1,10 @@
 package cache.file.v2;
 
+import java.io.File;
 import java.util.Calendar;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A CacheDirectory generates the Path
@@ -14,6 +18,9 @@ public class CacheDirectory {
     public static final String CACHE_DIR_NAME_PREFIX = "cache";
     public static final String CACHE_DIRECTORY = "/kla/klaS";
     public static final String CACHE_STAGING_DIRECTORY = "/kla/klaS/.staging";
+    private static final CacheDirectory INSTANCE = new CacheDirectory();
+    private static final Logger LOG = LoggerFactory.getLogger(CacheDirectory.class);
+    
  //   private static final int PATH_CACHE_THRESHOLD = 1000;
     private PathGenerator pathGenerator;
     
@@ -21,7 +28,22 @@ public class CacheDirectory {
     
     
     static {
-        
+        File file = new File(CACHE_DIRECTORY);
+        if (!file.exists()) {
+            boolean ret = file.mkdirs();
+            if (ret) LOG.info("Created cache directory: {}.", CACHE_DIRECTORY);
+            else LOG.error("Failed to create cache directory: {}.", CACHE_DIRECTORY);
+        }
+        file = new File(CACHE_STAGING_DIRECTORY);
+        if (!file.exists()) {
+            boolean ret = file.mkdirs();
+            if (ret) LOG.info("Created cache staging directory: {}.", CACHE_STAGING_DIRECTORY);
+            else LOG.error("Failed to create cache staging directory: {}.", CACHE_STAGING_DIRECTORY);
+        }
+    }
+    
+    public static CacheDirectory getInstance() {
+        return INSTANCE;
     }
     
     private CacheDirectory() {

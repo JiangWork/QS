@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * It has unlimited capacity to accept tasks.
  * It de-duplicates the tasks according to the {@code identity}.
  *
+ * By default, it uses {@link DefaultCommitter} and {@link DefaultExecutor}.
  * @author jiangzhao
  * @date Mar 20, 2017
  * @version V1.0
@@ -24,19 +25,27 @@ public class DefaultDumper implements Dumper {
 
     private List<Task> queue;
     private volatile boolean shouldRun;
-    private Worker worker;
+    private final Worker worker;
+    private final Committer committer;
+    private final Executor executor;
+    
     // lock utilities
     private final Lock lock;
     private final Condition notEmpty;
-    private final Committer committer;
+
     
-    public DefaultDumper(Committer committer) {
+    public DefaultDumper() {
+        this(new DefaultCommitter(), new DefaultExecutor());
+    }
+    
+    public DefaultDumper(Committer committer, Executor executor) {
         queue = new LinkedList<Task>();
         shouldRun = true;
         lock = new ReentrantLock();
         notEmpty = lock.newCondition();
         worker = new Worker();
         this.committer = committer;
+        this.executor = executor;
     }
     
     
@@ -65,16 +74,16 @@ public class DefaultDumper implements Dumper {
             lock.unlock();
         }
     }
-
+    
+    @Override
     public void start() {
         shouldRun = true;
         worker.start();
+        committer.start();
     }
     
-    /**
-     * Stop the dumper and return the number of unfinished tasks.
-     */
-    public int stop() {
+    @Override
+    public void stop() {
         shouldRun = false;
         worker.interrupt();
         try {
@@ -82,7 +91,7 @@ public class DefaultDumper implements Dumper {
         } catch (InterruptedException e) {
             //log
         }
-        return size();
+        committer.stop();
     }
     
     
@@ -114,8 +123,12 @@ public class DefaultDumper implements Dumper {
                 if (obtainedTask == null) {
                     LOG.debug("Obtained task is null. Continuing ...");
                 }
-                execute(obtainedTask); 
+                final String id = obtainedTask.identity;
+                String stagingDir = CacheDirectory.getInstance().getStagingPath(id);
+                execute(obtainedTask, stagingDir); 
                 // commit the task
+                Path toPath = CacheDirectory.getInstance().getPath(id);
+                committer.submit(stagingDir, toPath);
             }
             LOG.info("Exiting thread {}: interrupted {} remaining {}.", getName(), isInterrupted(), size());
         }
@@ -135,19 +148,17 @@ public class DefaultDumper implements Dumper {
             return task;
         }
         
-        public void execute(Task task) {
-            LOG.info("Executing task: {}.", task);
+        public void execute(Task task, String stagingDir) {
+            LOG.info("Executing task: {}, staging {}.", task, stagingDir);
             task.startTime = System.currentTimeMillis();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                interrupt();
-                e.printStackTrace();
-            }
+            Executor.Context ctx = new Executor.Context(
+                    task.file, task.identity, stagingDir
+                    );
+            executor.execute(ctx);
             task.endTime = System.currentTimeMillis();
         }
     }
+    
     private static class Task {
         String file;
         String identity;
@@ -166,14 +177,7 @@ public class DefaultDumper implements Dumper {
     }
     
     public static void main(String[] args) throws InterruptedException {
-        final DefaultDumper dumper = new DefaultDumper(new Committer() {
-            @Override
-            public void submit(String from, Path to) {
-                // TODO Auto-generated method stub
-                
-            }
-            
-        });
+        final DefaultDumper dumper = new DefaultDumper();
         dumper.start();
         Thread submitter = new Thread() {
             public void run() {
@@ -192,7 +196,9 @@ public class DefaultDumper implements Dumper {
         submitter.start();
         System.out.println(dumper.size());
         submitter.join();
+        
 //        Thread.sleep(4500);
 //        dumper.stop();
     }
+    
 }
