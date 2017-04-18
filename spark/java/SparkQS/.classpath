@@ -138,5 +138,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Github/QS/hadoop/target/hadoop-qs.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

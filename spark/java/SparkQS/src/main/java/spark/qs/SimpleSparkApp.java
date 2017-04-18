@@ -15,7 +15,7 @@ public class SimpleSparkApp {
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		JavaRDD<String> logData = sc.textFile(sparkReadMeFile).cache();
 		
-		long numAs = logData.filter((String s) -> s.contains("a")).count();
+		//long numAs = logData.filter((String s) -> s.contains("a")).count();
 		
 //		long numAs = logData.filter(new Function<String, Boolean>() {
 //		      public Boolean call(String s) { return s.contains("a"); }
@@ -26,7 +26,7 @@ public class SimpleSparkApp {
 		    }).count();
 
 		    System.out.println("JIANGZHAO>> Lines with a: " + numAs + ", lines with b: " + numBs);
-		    new Thread(() -> System.out.println("Lambda experssion")).start();
+		    //new Thread(() -> System.out.println("Lambda experssion")).start();
 	}
 
 }
