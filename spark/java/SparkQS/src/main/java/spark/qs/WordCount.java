@@ -1,10 +1,15 @@
 package spark.qs;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.spark.HashPartitioner;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -49,7 +54,7 @@ public class WordCount {
 			
 		});
 		JavaPairRDD<String, Integer> partones= ones.partitionBy(new HashPartitioner(20));
-		System.out.println("Partition number for " + ones  + " is " + ones.getNumPartitions());
+		System.out.println("Partition number for " + partones  + " is " + partones.getNumPartitions());
 		JavaPairRDD<String, Integer> counts = partones.reduceByKey(new Function2<Integer, Integer, Integer>(){
 
 			@Override
@@ -63,7 +68,26 @@ public class WordCount {
 		for(Tuple2<String, Integer> tuple: list) {
 			System.out.println(tuple._1 + ":" + tuple._2);
 		}
+		System.out.println(new Date() + ": start to write local.");
+		// following will also written to HDFS
+		counts.saveAsTextFile("spark-output");
+		System.out.println(new Date() + ": start to write to HDFS.");
+		// also write to HDFS
+		Configuration hdfsConf = sc.hadoopConfiguration();
+		Path path = new Path(out+"_code");
+		try {
+			FileSystem fs = path.getFileSystem(hdfsConf);
+			FSDataOutputStream fos = fs.create(path, true);
+			for(Tuple2<String, Integer> tuple: list) {
+				fos.write((tuple._1 + ":" + tuple._2+"\n").getBytes("UTF-8"));
+			}
+			fos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		sc.stop();
 		System.out.println(new Date() + ": finished. " + StringUtils.echo("From dependencies."));
 	}
 
