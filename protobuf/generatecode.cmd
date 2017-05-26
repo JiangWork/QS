@@ -1,0 +1,1 @@
+protoc-3.3.0-win32\bin\protoc.exe --proto_path=protos --java_out=src\main\java protos\Calculator.proto protos\CalculatorMsg.proto
