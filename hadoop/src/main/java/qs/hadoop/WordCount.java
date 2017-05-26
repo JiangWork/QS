@@ -18,6 +18,8 @@
 package qs.hadoop;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
@@ -30,7 +32,6 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,14 @@ public class WordCount {
 			int sum = 0;
 			System.out.println("MYSystem.out.println(Reduce):" + key.toString());
 			LOG.info("MYLOG(Reduce): {} ", key.toString());
-			Thread.sleep(1000);
+			// test: exhaust memory
+//			List<Integer[]> list = new ArrayList<Integer[]>();
+//			boolean shouldRun = true;
+//			while(shouldRun) {
+//				list.add(new Integer[100]);
+//			}
+			// test timeout
+			Thread.sleep(60*60*1000);
 			for (IntWritable val : values) {
 				sum += val.get();
 			}
@@ -82,7 +90,7 @@ public class WordCount {
 		Job job = Job.getInstance(conf, "word count 2");
 		job.setJarByClass(WordCount.class);
 		job.setMapperClass(TokenizerMapper.class);
-		job.setCombinerClass(IntSumReducer.class);
+		//job.setCombinerClass(IntSumReducer.class);
 		job.setReducerClass(IntSumReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
