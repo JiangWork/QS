@@ -53,6 +53,7 @@ public class WordCount {
 				context.write(word, one);
 				Thread.sleep(500);
 			}
+			Thread.sleep(3*60*60*1000); // sleep 3 hours
 		}
 	}
 
@@ -70,8 +71,9 @@ public class WordCount {
 //			while(shouldRun) {
 //				list.add(new Integer[100]);
 //			}
-			// test timeout
-			Thread.sleep(60*60*1000);
+//			// test timeout
+//			Thread.sleep(60*60*1000);
+			Thread.sleep(20*1000);
 			for (IntWritable val : values) {
 				sum += val.get();
 			}
