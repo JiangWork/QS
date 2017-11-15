@@ -66,8 +66,11 @@ public class YarnlogDumperHelper extends LogCLIHelpers {
 									break;
 								}
 							}
+							
 						}
-
+						if(containerId.trim().length() != 0 && foundAnyLogs) {
+							break;
+						}
 						// Next container
 						key = new LogKey();
 						valueStream = reader.next(key);
